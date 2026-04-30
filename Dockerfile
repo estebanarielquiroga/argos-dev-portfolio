@@ -1,8 +1,8 @@
 # Usamos una imagen de Python oficial como base
 FROM python:3.11-slim
 
-# Instalamos curl para el proceso de instalación de Node.js
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+# Instalamos curl y unzip para el proceso de instalación de Node.js y Bun
+RUN apt-get update && apt-get install -y curl unzip && rm -rf /var/lib/apt/lists/*
 
 # Instalamos Node.js (necesario para el frontend de Reflex)
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - \
