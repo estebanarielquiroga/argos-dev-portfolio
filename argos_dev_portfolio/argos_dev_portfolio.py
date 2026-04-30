@@ -36,10 +36,9 @@ app = rx.App(
 
 # Si estamos en producción, hacemos que el backend sirva los archivos de la web
 if os.getenv("REFLEX_ENV") == "prod":
-    static_dir = os.path.join(os.getcwd(), ".web", "_static")
-    # Usamos add_event_handler que es más compatible o montamos directamente
-    if os.path.exists(static_dir):
-        app._api.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+    # Usamos la ruta absoluta de la carpeta exportada por Reflex
+    static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".web", "_static")
+    app._api.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
 
 app.add_page(
     index, 
