@@ -1,2 +1,4 @@
-
 reflex==0.8.17
+fastapi
+python-multipart
+uvicorn
