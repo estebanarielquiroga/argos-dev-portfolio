@@ -27,9 +27,22 @@ def index() -> rx.Component:
         min_height="100vh",
     )
 
+import os
+from fastapi.staticfiles import StaticFiles
+
 app = rx.App(
     style=BASE_STYLE,
 )
+
+# Si estamos en producción, hacemos que el backend sirva los archivos de la web
+if os.getenv("REFLEX_ENV") == "prod":
+    @app.api.on_event("startup")
+    def mount_static():
+        # Buscamos la carpeta donde Reflex exporta la web
+        static_dir = os.path.join(os.getcwd(), ".web", "_static")
+        if os.path.exists(static_dir):
+            app.api.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+
 app.add_page(
     index, 
     title="Argos-Dev | Portafolio",

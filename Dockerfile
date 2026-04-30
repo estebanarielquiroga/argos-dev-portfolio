@@ -26,8 +26,9 @@ ENV REFLEX_ENV=prod
 RUN reflex init
 RUN reflex export --frontend-only --no-zip
 
-# Exponemos el puerto que Railway nos asigne (por defecto usa el 8000 o el que definamos en variables)
+# Exponemos el puerto (Railway usa la variable PORT dinámicamente)
+# No es necesario EXPOSE fijo, pero usaremos 8000 como backup
 EXPOSE 8000
 
-# Comando para arrancar el backend, que también servirá el frontend en modo producción
-CMD ["reflex", "run", "--env", "prod", "--backend-only"]
+# Usamos un shell para que la variable $PORT se expanda correctamente
+CMD ["sh", "-c", "reflex run --env prod --backend-only --backend-port ${PORT:-8000} --loglevel debug"]
