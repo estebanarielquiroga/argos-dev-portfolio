@@ -3,6 +3,15 @@
 }
 
 :{$PORT} {
-    # Prueba de vida: si entras a la web, deberías ver este texto
-    respond "¡HOLA! El servidor Caddy está funcionando. Si ves esto, la conexión está OK."
+    # Carpeta donde están los archivos de la web
+    root * .web/_static
+    
+    # Servir archivos estáticos
+    file_server
+    
+    # Redirigir la lógica al motor de Python
+    reverse_proxy /_event/* localhost:8001
+    
+    # Soporte para Single Page App
+    try_files {path} {path}/ /index.html
 }
