@@ -34,14 +34,23 @@ app = rx.App(
     style=BASE_STYLE,
 )
 
-# Si estamos en producción, hacemos que el backend sirva los archivos de la web
-if os.getenv("REFLEX_ENV") == "prod":
-    # Usamos la ruta absoluta de la carpeta exportada por Reflex
-    static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".web", "_static")
-    app._api.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+app = rx.App(
+    style=BASE_STYLE,
+)
 
 app.add_page(
     index, 
     title="Argos-Dev | Portafolio",
     description="Portafolio profesional de Argos-Dev. Programador de aplicaciones web y de escritorio."
 )
+
+# Si estamos en producción, preparamos la unión de backend y frontend
+if os.getenv("REFLEX_ENV") == "prod":
+    def mount_static():
+        # Buscamos la carpeta de la web
+        static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".web", "_static")
+        if os.path.exists(static_dir):
+            app._api.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+    
+    # Le decimos a la app que ejecute esto en cuanto arranque
+    app._api.add_event_handler("startup", mount_static)

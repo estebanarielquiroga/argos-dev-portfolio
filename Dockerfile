@@ -29,6 +29,5 @@ ENV NODE_ENV=production
 # Exponemos el puerto
 EXPOSE 8000
 
-# Plan B: Ejecutamos todo al arrancar el contenedor
-# Esto asegura que Reflex tenga acceso a todo lo que necesita
+# Comando final: inicializa, exporta y arranca el backend
 CMD ["sh", "-c", "reflex init && reflex export --frontend-only --no-zip && reflex run --env prod --backend-only --backend-port ${PORT:-8000}"]
