@@ -1,18 +1,8 @@
 {
-    # Activamos el modo debug para ver exactamente qué pasa en los logs
     debug
 }
 
 :{$PORT} {
-    # Definimos la carpeta raíz
-    root * .web/_static
-    
-    # Servimos los archivos
-    file_server
-    
-    # Redirigimos la lógica de Reflex al puerto 8001
-    reverse_proxy /_event/* localhost:8001
-    
-    # Si no encuentra un archivo, que intente con el index.html (necesario para Reflex)
-    try_files {path} {path}/ /index.html
+    # Prueba de vida: si entras a la web, deberías ver este texto
+    respond "¡HOLA! El servidor Caddy está funcionando. Si ves esto, la conexión está OK."
 }
