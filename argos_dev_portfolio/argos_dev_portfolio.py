@@ -36,12 +36,12 @@ app = rx.App(
 
 # Si estamos en producción, hacemos que el backend sirva los archivos de la web
 if os.getenv("REFLEX_ENV") == "prod":
-    @app.api.on_event("startup")
+    @app._api.on_event("startup")
     def mount_static():
         # Buscamos la carpeta donde Reflex exporta la web
         static_dir = os.path.join(os.getcwd(), ".web", "_static")
         if os.path.exists(static_dir):
-            app.api.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+            app._api.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
 
 app.add_page(
     index, 
