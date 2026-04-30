@@ -1,34 +1,34 @@
-# Usamos una imagen de Python oficial como base
+# Imagen base de Python
 FROM python:3.11-slim
 
-# Instalamos curl y unzip para el proceso de instalación de Node.js y Bun
-RUN apt-get update && apt-get install -y curl unzip && rm -rf /var/lib/apt/lists/*
+# Instalamos herramientas básicas del sistema
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-# Instalamos Node.js (necesario para el frontend de Reflex)
+# Instalamos Node.js
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
-# Seteamos el directorio de trabajo
+# Directorio de trabajo
 WORKDIR /app
 
-# Copiamos el archivo de requerimientos e instalamos las librerías de Python
+# Instalamos dependencias de Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiamos todo el proyecto al servidor
+# Copiamos el código
 COPY . .
 
-# Seteamos variables de entorno para producción
-ENV NODE_ENV=production
+# Variables de entorno
 ENV REFLEX_ENV=prod
+ENV NODE_ENV=production
 
-# Inicializamos y exportamos el frontend (esto genera los archivos estáticos)
-RUN reflex init
-RUN reflex export --frontend-only --no-zip
-
-# Exponemos el puerto (Railway usa la variable PORT dinámicamente)
-# No es necesario EXPOSE fijo, pero usaremos 8000 como backup
+# Exponemos el puerto
 EXPOSE 8000
 
-# Usamos un shell para que la variable $PORT se expanda correctamente
-CMD ["sh", "-c", "reflex run --env prod --backend-only --backend-port ${PORT:-8000} --loglevel debug"]
+# Plan B: Ejecutamos todo al arrancar el contenedor
+# Esto asegura que Reflex tenga acceso a todo lo que necesita
+CMD ["sh", "-c", "reflex init && reflex export --frontend-only --no-zip && reflex run --env prod --backend-only --backend-port ${PORT:-8000}"]
