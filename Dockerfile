@@ -1,23 +1,26 @@
-# Imagen base
-FROM python:3.11-slim
+# Imagen base (Usamos una más completa para Render)
+FROM python:3.11
+
+# Instalamos herramientas
+RUN apt-get update && apt-get install -y \
+    curl unzip git nodejs npm \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Solo instalamos lo básico para el motor de Python
-RUN apt-get update && apt-get install -y \
-    curl unzip git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Instalamos dependencias
+# Dependencias
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiamos TODO (incluyendo la carpeta .web que vas a subir)
+# Código
 COPY . .
 
-# Variables de entorno
+# Construcción
 ENV REFLEX_ENV=prod
+ENV NODE_ENV=production
+RUN reflex init
+RUN reflex export --frontend-only --no-zip
 
-# COMANDO FINAL:
-# Arrancamos el motor y servimos la carpeta que YA SUBISTE
-CMD ["sh", "-c", "(reflex run --env prod --backend-only --backend-port 8001 &) && python3 -m http.server $PORT --directory .web/build/client"]
+# Render usa la variable PORT automáticamente
+# Usamos el motor de Reflex para servir todo
+CMD ["sh", "-c", "reflex run --env prod --backend-only --backend-port $PORT"]
