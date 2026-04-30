@@ -1,13 +1,18 @@
+{
+    # Activamos el modo debug para ver exactamente qué pasa en los logs
+    debug
+}
+
 :{$PORT} {
-    # Carpeta donde están los archivos de la web
+    # Definimos la carpeta raíz
     root * .web/_static
     
-    # Servir archivos estáticos (HTML, CSS, JS)
+    # Servimos los archivos
     file_server
     
-    # Redirigir las llamadas de "lógica" al motor de Python en el puerto 8001
+    # Redirigimos la lógica de Reflex al puerto 8001
     reverse_proxy /_event/* localhost:8001
     
-    # Manejar las rutas de la web para que funcionen bien (Single Page App)
+    # Si no encuentra un archivo, que intente con el index.html (necesario para Reflex)
     try_files {path} {path}/ /index.html
 }
