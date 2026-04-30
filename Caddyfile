@@ -3,15 +3,12 @@
 }
 
 :{$PORT} {
-    # Carpeta donde están los archivos de la web
+    # Carpeta raíz
     root * .web/_static
     
-    # Servir archivos estáticos
-    file_server
+    # MODO EXPLORADOR: Esto nos mostrará la lista de archivos si existen
+    file_server browse
     
-    # Redirigir la lógica al motor de Python
+    # Redirigir la lógica
     reverse_proxy /_event/* localhost:8001
-    
-    # Soporte para Single Page App
-    try_files {path} {path}/ /index.html
 }
