@@ -18,12 +18,16 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiamos todo el proyecto al servidor
 COPY . .
 
-# Inicializamos Reflex en el servidor para preparar el frontend
+# Seteamos variables de entorno para producción
+ENV NODE_ENV=production
+ENV REFLEX_ENV=prod
+
+# Inicializamos y exportamos el frontend (esto genera los archivos estáticos)
 RUN reflex init
+RUN reflex export --frontend-only --no-zip
 
-# Exponemos los puertos que usa Reflex (8000 para el backend y 3000 para el frontend)
+# Exponemos el puerto que Railway nos asigne (por defecto usa el 8000 o el que definamos en variables)
 EXPOSE 8000
-EXPOSE 3000
 
-# Comando para arrancar la aplicación en modo producción
+# Comando para arrancar el backend, que también servirá el frontend en modo producción
 CMD ["reflex", "run", "--env", "prod", "--backend-only"]
