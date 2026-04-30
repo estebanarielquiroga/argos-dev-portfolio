@@ -1,0 +1,13 @@
+:{$PORT} {
+    # Carpeta donde están los archivos de la web
+    root * .web/_static
+    
+    # Servir archivos estáticos (HTML, CSS, JS)
+    file_server
+    
+    # Redirigir las llamadas de "lógica" al motor de Python en el puerto 8001
+    reverse_proxy /_event/* localhost:8001
+    
+    # Manejar las rutas de la web para que funcionen bien (Single Page App)
+    try_files {path} {path}/ /index.html
+}
