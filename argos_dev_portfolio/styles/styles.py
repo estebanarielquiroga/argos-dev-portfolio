@@ -1,50 +1,68 @@
 import reflex as rx
 
-# Colores (Tema Oscuro y Neón)
-class Color:
-    BACKGROUND = "#0F172A"  # Slate 900 (Fondo principal muy oscuro)
-    SECONDARY_BG = "#1E293B" # Slate 800 (Fondo secundario para tarjetas)
-    TEXT = "#F8FAFC"        # Slate 50 (Texto claro)
-    TEXT_MUTED = "#94A3B8"  # Slate 400 (Texto secundario)
-    ACCENT = "#38BDF8"      # Light Blue 400 (Acento principal tipo neón)
-    ACCENT_HOVER = "#0284C7" # Light Blue 600
+# ============================================================
+# SISTEMA DE DISEÑO PREMIUM
+# ============================================================
 
-# Estilos Generales
+class Color:
+    BACKGROUND = "#030712"    # Darker Slate/Grey
+    SECONDARY_BG = "#111827"  # Gray 900
+    TEXT = "#F9FAFB"         # White
+    TEXT_MUTED = "#9CA3AF"   # Gray 400
+    ACCENT = "#8B5CF6"       # Violet 500 (Vibrant)
+    ACCENT_LIGHT = "#A78BFA" # Violet 400
+    ACCENT_DARK = "#6D28D9"  # Violet 700
+    GLASS_BG = "rgba(17, 24, 39, 0.7)"
+    GLASS_BORDER = "rgba(255, 255, 255, 0.1)"
+
+# Estilos de Glassmorphism
+glass_style = {
+    "background_color": Color.GLASS_BG,
+    "backdrop_filter": "blur(12px)",
+    "border": f"1px solid {Color.GLASS_BORDER}",
+    "border_radius": "1.5em",
+}
+
+# Estilos Generales de la App
 BASE_STYLE = {
     "background_color": Color.BACKGROUND,
     "color": Color.TEXT,
-    "font_family": "Inter, sans-serif",
+    "font_family": "'Outfit', sans-serif",
+    "scroll_behavior": "smooth",
     "::selection": {
         "background_color": Color.ACCENT,
-        "color": Color.BACKGROUND,
+        "color": Color.TEXT,
     }
 }
 
-# Estilos específicos
+# Estilos de Componentes
 button_style = {
     "background_color": Color.ACCENT,
-    "color": Color.BACKGROUND,
-    "font_weight": "bold",
-    "padding": "1em 2em",
-    "border_radius": "0.5em",
+    "color": Color.TEXT,
+    "font_weight": "600",
+    "padding": "0.75em 2em",
+    "border_radius": "100px",
+    "transition": "all 0.3s ease",
     "_hover": {
-        "background_color": Color.ACCENT_HOVER,
-        "cursor": "pointer"
+        "background_color": Color.ACCENT_DARK,
+        "transform": "translateY(-2px)",
+        "box_shadow": f"0 10px 20px -5px {Color.ACCENT_DARK}",
     }
 }
 
 heading_style = {
-    "color": Color.TEXT,
-    "font_family": "Inter, sans-serif",
-    "font_weight": "bold",
+    "font_family": "'Outfit', sans-serif",
+    "font_weight": "800",
+    "letter_spacing": "-0.02em",
 }
 
 card_style = {
-    "background_color": Color.SECONDARY_BG,
+    **glass_style,
     "padding": "2em",
-    "border_radius": "1em",
-    "box_shadow": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+    "transition": "all 0.3s ease",
     "_hover": {
+        "transform": "translateY(-5px)",
         "border": f"1px solid {Color.ACCENT}",
+        "box_shadow": f"0 20px 40px -15px rgba(139, 92, 246, 0.3)",
     }
 }

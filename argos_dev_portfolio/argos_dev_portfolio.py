@@ -30,14 +30,15 @@ def index() -> rx.Component:
 
 # ============================================================
 # Configuración de la aplicación
-# IMPORTANTE: NO agregar código de montaje de archivos estáticos aquí.
-# El servidor Caddy (configurado en Caddyfile) se encarga de eso.
 # ============================================================
 app = rx.App(
     style=BASE_STYLE,
+    stylesheets=[
+        "https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;500;600;700;800;900&display=swap",
+    ],
 )
 app.add_page(
     index,
-    title="Argos-Dev | Portafolio",
-    description="Portafolio profesional de Argos-Dev. Programador de aplicaciones web y de escritorio."
+    title="Argos-Dev | Portafolio Premium",
+    description="Explora el trabajo de Argos-Dev, desarrollador full-stack especializado en soluciones modernas y eficientes."
 )
