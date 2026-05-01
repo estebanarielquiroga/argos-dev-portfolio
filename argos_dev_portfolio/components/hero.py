@@ -1,5 +1,5 @@
 import reflex as rx
-from ..styles.styles import Color
+from ..styles.styles import Color, heading_style, button_style
 
 def hero() -> rx.Component:
     return rx.center(
