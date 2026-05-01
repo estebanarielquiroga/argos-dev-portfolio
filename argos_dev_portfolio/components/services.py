@@ -36,7 +36,12 @@ def services() -> rx.Component:
                 "Scripts y herramientas inteligentes para eliminar tareas repetitivas y errores humanos.",
                 "zap",
             ),
-            columns=rx.breakpoints(initial="1", sm="2", lg="3"),
+            service_card(
+                "Integración de IA",
+                "Implementación de IA en tareas administrativas para dar el salto hacia la transformación digital.",
+                "bot",
+            ),
+            columns=rx.breakpoints(initial="1", sm="2", lg="4"),
             spacing="6",
             width="100%",
         ),

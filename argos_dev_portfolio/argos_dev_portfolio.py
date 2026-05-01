@@ -5,6 +5,8 @@ from .components.about import about
 from .components.services import services
 from .components.projects import projects
 from .components.contact import contact
+from .components.success_stories import success_stories
+from .components.diagnosis import diagnosis_cta
 
 # ============================================================
 # Página principal del portafolio
@@ -16,6 +18,8 @@ def index() -> rx.Component:
                 hero(),
                 about(),
                 services(),
+                success_stories(),
+                diagnosis_cta(),
                 projects(),
                 contact(),
                 max_width="800px",
@@ -23,6 +27,7 @@ def index() -> rx.Component:
                 padding_x="2em",
                 spacing="6",
             ),
+
         ),
         style=BASE_STYLE,
         min_height="100vh",
