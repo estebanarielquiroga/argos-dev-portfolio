@@ -1,10 +1,16 @@
 :{$PORT:8000} {
     root * /app/.web/build/client
 
-    # Backend: Atrapamos todo lo que empiece con estos prefijos
+    # Backend con headers de proxy explicitos
     handle /_event* {
-        reverse_proxy 127.0.0.1:8001
+        reverse_proxy 127.0.0.1:8001 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
     }
+
     handle /ping* {
         reverse_proxy 127.0.0.1:8001
     }
@@ -15,7 +21,7 @@
         reverse_proxy 127.0.0.1:8001
     }
 
-    # Frontend: Todo lo demas
+    # Frontend
     handle {
         try_files {path} {path}/ /index.html
         file_server
