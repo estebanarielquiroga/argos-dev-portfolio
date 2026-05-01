@@ -1,14 +1,33 @@
-{
-    debug
-}
+# ============================================================
+# Caddyfile - Configuración del servidor web Caddy
+#
+# Caddy es el "portero" que:
+#   - Sirve el frontend (HTML, CSS, JS) desde .web/_static
+#   - Redirige las solicitudes de lógica al backend de Reflex
+# ============================================================
 
-:{$PORT} {
-    # Carpeta raíz
-    root * .web/_static
-    
-    # MODO EXPLORADOR: Esto nos mostrará la lista de archivos si existen
-    file_server browse
-    
-    # Redirigir la lógica
+:{$PORT:8080} {
+
+    # Carpeta raíz donde están los archivos HTML/CSS/JS compilados por Reflex
+    root * /app/.web/_static
+
+    # Compresión automática (hace la página más rápida)
+    encode gzip
+
+    # Proxy inverso: las solicitudes de WebSocket y eventos van al backend de Reflex
     reverse_proxy /_event/* localhost:8001
+    reverse_proxy /ping localhost:8001
+    reverse_proxy /state/* localhost:8001
+
+    # Sirvemos los archivos estáticos del frontend
+    # "try_files" asegura que las rutas SPA funcionen correctamente
+    try_files {path} {path}/ /index.html
+    file_server
+
+    # Encabezados de seguridad básicos
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy strict-origin-when-cross-origin
+    }
 }
