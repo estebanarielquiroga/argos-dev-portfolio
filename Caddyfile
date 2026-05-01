@@ -1,5 +1,14 @@
 :{$PORT:8000} {
     root * /app/.web/build/client
     file_server
-    reverse_proxy /_event/* localhost:8001
+    
+    # Proxy para el backend de Reflex
+    # Maneja eventos, pings y subida de archivos
+    reverse_proxy /_event/* /ping /_upload/* /_state/* localhost:8001 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+    }
+
+    # Soporte para Single Page Application (SPA)
+    try_files {path} {path}/ /index.html
 }
