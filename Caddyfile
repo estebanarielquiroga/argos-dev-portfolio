@@ -1,11 +1,23 @@
 :{$PORT:8000} {
     root * /app/.web/build/client
-    
-    # Servimos archivos estaticos si existen
-    file_server {
-        pass_thru
+
+    # Backend: Atrapamos todo lo que empiece con estos prefijos
+    handle /_event* {
+        reverse_proxy 127.0.0.1:8001
     }
-    
-    # Si no es un archivo estatico (como /_event), va al backend
-    reverse_proxy 127.0.0.1:8001
+    handle /ping* {
+        reverse_proxy 127.0.0.1:8001
+    }
+    handle /_upload* {
+        reverse_proxy 127.0.0.1:8001
+    }
+    handle /_state* {
+        reverse_proxy 127.0.0.1:8001
+    }
+
+    # Frontend: Todo lo demas
+    handle {
+        try_files {path} {path}/ /index.html
+        file_server
+    }
 }
