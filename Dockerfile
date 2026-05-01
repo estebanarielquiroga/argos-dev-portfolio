@@ -1,10 +1,13 @@
 FROM python:3.11
 
-RUN apt-get update && apt-get install -y curl unzip git && rm -rf /var/lib/apt/lists/*
+# Instalacion de dependencias de sistema y CADDY
+RUN apt-get update && apt-get install -y curl unzip git debian-keyring debian-archive-keyring apt-transport-https \
+    && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg \
+    && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list \
+    && apt-get update && apt-get install -y caddy \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs && rm -rf /var/lib/apt/lists/*
-
+# Instalacion de Bun (necesario para el frontend de Reflex)
 RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="/root/.bun/bin:$PATH"
 
@@ -24,29 +27,16 @@ ENV REFLEX_BACKEND_PORT=8001
 RUN reflex init
 RUN reflex export --frontend-only --no-zip
 
-# Script de arranque inteligente
+# Script de arranque refinado
 RUN printf '#!/bin/sh\n\
 PORT=${PORT:-8000}\n\
-echo ">>> Migrando Base de Datos..."\n\
-reflex db migrate || echo "Sin migraciones necesarias"\n\
 echo ">>> Iniciando Backend..."\n\
 reflex run --env prod --backend-only --backend-port $REFLEX_BACKEND_PORT > backend.log 2>&1 &\n\
 \n\
-echo ">>> Esperando a que el Backend responda en $REFLEX_BACKEND_PORT..."\n\
-n=0\n\
-until [ $n -ge 20 ] || curl -s http://127.0.0.1:$REFLEX_BACKEND_PORT/ping > /dev/null; do\n\
-  echo ">>> Todavia esperando al backend..."\n\
-  sleep 2\n\
-  n=$((n+1))\n\
-done\n\
+echo ">>> Esperando al backend..."\n\
+sleep 15\n\
 \n\
-if [ $n -ge 20 ]; then\n\
-  echo ">>> ERROR: El backend no arranco a tiempo. Ultimas lineas del log:"\n\
-  tail -n 20 backend.log\n\
-  exit 1\n\
-fi\n\
-\n\
-echo ">>> Backend listo. Iniciando Caddy en puerto $PORT..."\n\
+echo ">>> Iniciando Caddy en puerto $PORT..."\n\
 exec caddy run --config /app/Caddyfile --adapter caddyfile\n\
 ' > /start.sh && chmod +x /start.sh
 
