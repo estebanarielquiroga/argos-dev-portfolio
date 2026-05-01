@@ -1,16 +1,11 @@
 :{$PORT:8000} {
-    # Carpeta del frontend
     root * /app/.web/build/client
-
-    # 1. Rutas que pertenecen al Backend (Reflex)
-    # Usamos un prefijo mas amplio para capturar todo lo que necesite Reflex
-    @backend {
-        path /_event* /ping* /_upload* /_state* /state*
+    
+    # Servimos archivos estaticos si existen
+    file_server {
+        pass_thru
     }
-    reverse_proxy @backend localhost:8001
-
-    # 2. Rutas que pertenecen al Frontend
-    # Si el archivo existe, lo sirve. Si no, manda al index.html (SPA)
-    try_files {path} {path}/ /index.html
-    file_server
+    
+    # Si no es un archivo estatico (como /_event), va al backend
+    reverse_proxy 127.0.0.1:8001
 }
