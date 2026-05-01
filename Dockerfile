@@ -27,8 +27,8 @@ RUN reflex export --frontend-only --no-zip
 RUN printf '#!/bin/sh\n\
 PORT=${PORT:-8000}\n\
 export REFLEX_BACKEND_PORT=8001\n\
-echo ">>> Iniciando Backend Reflex 0.9.1..."\n\
-reflex run --env prod --backend-only &\n\
+echo ">>> Iniciando Backend Reflex 0.9.1 en $REFLEX_BACKEND_PORT..."\n\
+reflex run --env prod --backend-only --backend-port $REFLEX_BACKEND_PORT &\n\
 sleep 12\n\
 echo ">>> Iniciando Caddy en puerto $PORT..."\n\
 caddy run --config /app/Caddyfile --adapter caddyfile\n\

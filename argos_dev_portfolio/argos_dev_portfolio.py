@@ -36,7 +36,6 @@ app = rx.App(
     stylesheets=[
         "https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;500;600;700;800;900&display=swap",
     ],
-    cors_allowed_origins=["*"], # Permitir conexiones desde cualquier origen para evitar errores de WebSocket
 )
 app.add_page(
     index,
