@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y curl unzip git && rm -rf /var/lib/apt/l
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs && rm -rf /var/lib/apt/lists/*
 
-# Caddy (servidor web profesional)
+# Caddy
 RUN curl -fsSL https://github.com/caddyserver/caddy/releases/download/v2.8.4/caddy_2.8.4_linux_amd64.tar.gz \
     -o /tmp/caddy.tar.gz \
     && tar -xzf /tmp/caddy.tar.gz -C /tmp \
@@ -28,20 +28,17 @@ ENV NODE_ENV=production
 
 RUN reflex init
 
-# Script sin CRLF, usando el puerto correcto de Railway (8000)
+# Script de arranque ultra-simple (sin set -e para evitar crashes por advertencias)
 RUN printf '#!/bin/sh\n\
-set -e\n\
 PORT=${PORT:-8000}\n\
-echo ">>> Iniciando en puerto $PORT"\n\
 export API_URL=https://quirodev.ar\n\
-echo ">>> Exportando frontend con API_URL=$API_URL..."\n\
+echo ">>> Exportando..."\n\
 reflex export --frontend-only --no-zip\n\
-echo ">>> Archivos:"\n\
-ls /app/.web/build/client/ 2>/dev/null || echo "SIN ARCHIVOS"\n\
-reflex run --env prod --backend-only --backend-port 8001 &\n\
-sleep 5\n\
-echo ">>> Caddy en $PORT"\n\
-exec caddy run --config /app/Caddyfile --adapter caddyfile\n\
+echo ">>> Iniciando Backend..."\n\
+reflex run --env prod --backend-only --port 8001 &\n\
+sleep 7\n\
+echo ">>> Iniciando Caddy..."\n\
+caddy run --config /app/Caddyfile --adapter caddyfile\n\
 ' > /start.sh && chmod +x /start.sh
 
 CMD ["/start.sh"]
