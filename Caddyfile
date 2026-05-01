@@ -1,14 +1,16 @@
 :{$PORT:8000} {
+    # Carpeta del frontend
     root * /app/.web/build/client
-    file_server
-    
-    # Proxy para el backend de Reflex
-    # Maneja eventos, pings y subida de archivos
-    reverse_proxy /_event/* /ping /_upload/* /_state/* localhost:8001 {
-        header_up Host {host}
-        header_up X-Real-IP {remote_host}
-    }
 
-    # Soporte para Single Page Application (SPA)
+    # 1. Rutas que pertenecen al Backend (Reflex)
+    # Usamos un prefijo mas amplio para capturar todo lo que necesite Reflex
+    @backend {
+        path /_event* /ping* /_upload* /_state* /state*
+    }
+    reverse_proxy @backend localhost:8001
+
+    # 2. Rutas que pertenecen al Frontend
+    # Si el archivo existe, lo sirve. Si no, manda al index.html (SPA)
     try_files {path} {path}/ /index.html
+    file_server
 }
