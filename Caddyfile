@@ -1,5 +1,5 @@
 :{$PORT:8080} {
-    root * /app/.web/_static
+    root * /app/.web/build/client
     file_server
     reverse_proxy /_event/* localhost:8001
 }
