@@ -25,7 +25,7 @@ def success_card(title: str, description: str, metric_before: str, metric_after:
                 align_items="start",
                 gap="1",
             ),
-            justify="space-between",
+            justify="between",
             align_items="center",
             width="100%",
         ),
