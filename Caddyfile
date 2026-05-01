@@ -1,10 +1,15 @@
 :{$PORT:8000} {
     root * /app/.web/build/client
 
-    # Backend: Proxy ultra-simple (Caddy maneja WebSockets solo)
+    # Soporte para WebSockets de Reflex 0.9.x
     handle /_event* {
-        reverse_proxy localhost:8001
+        reverse_proxy localhost:8001 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+        }
     }
+
+    # Resto de endpoints
     handle /ping* {
         reverse_proxy localhost:8001
     }
@@ -15,7 +20,7 @@
         reverse_proxy localhost:8001
     }
 
-    # Frontend
+    # Frontend (SPA)
     handle {
         try_files {path} {path}/ /index.html
         file_server

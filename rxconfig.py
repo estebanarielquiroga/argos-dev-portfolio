@@ -1,8 +1,8 @@
+import os
 import reflex as rx
 
 config = rx.Config(
     app_name="argos_dev_portfolio",
-    api_url="https://quirodev.ar",
-    # Usamos 127.0.0.1 para comunicacion interna super segura con Caddy
-    backend_host="127.0.0.1",
+    # Usamos la variable de entorno API_URL o el dominio fijo
+    api_url=os.getenv("API_URL", "https://quirodev.ar"),
 )
