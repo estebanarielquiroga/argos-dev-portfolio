@@ -47,7 +47,7 @@ def contact() -> rx.Component:
                 is_external=True,
             ),
             gap="5",
-            direction=["column", "row"],
+            direction=rx.breakpoints(initial="column", sm="row"),
             justify="center",
             padding_top="3em",
         ),
