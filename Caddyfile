@@ -1,24 +1,18 @@
 :{$PORT:8000} {
     root * /app/.web/build/client
 
-    # Backend con headers de proxy explicitos
+    # Backend: Proxy ultra-simple (Caddy maneja WebSockets solo)
     handle /_event* {
-        reverse_proxy 127.0.0.1:8001 {
-            header_up Host {host}
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-For {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-        }
+        reverse_proxy localhost:8001
     }
-
     handle /ping* {
-        reverse_proxy 127.0.0.1:8001
+        reverse_proxy localhost:8001
     }
     handle /_upload* {
-        reverse_proxy 127.0.0.1:8001
+        reverse_proxy localhost:8001
     }
     handle /_state* {
-        reverse_proxy 127.0.0.1:8001
+        reverse_proxy localhost:8001
     }
 
     # Frontend
