@@ -13,7 +13,7 @@ def project_card(title: str, description: str, image: str, tags: list) -> rx.Com
         rx.vstack(
             rx.heading(title, size="5", style=heading_style),
             rx.text(description, size="2", color=Color.TEXT_MUTED),
-            rx.hbox(
+            rx.hstack(
                 *[rx.badge(tag, variant="outline", color_scheme="violet") for tag in tags],
                 spacing="2",
                 flex_wrap="wrap",

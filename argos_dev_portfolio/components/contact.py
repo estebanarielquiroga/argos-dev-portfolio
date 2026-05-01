@@ -20,7 +20,7 @@ def contact() -> rx.Component:
         rx.flex(
             rx.link(
                 rx.button(
-                    rx.hbox(
+                    rx.hstack(
                         rx.icon(tag="mail", size=20),
                         rx.text("Enviar Correo"),
                         spacing="3",
@@ -33,7 +33,7 @@ def contact() -> rx.Component:
             ),
             rx.link(
                 rx.button(
-                    rx.hbox(
+                    rx.hstack(
                         rx.icon(tag="message-circle", size=20),
                         rx.text("Chatear por WhatsApp"),
                         spacing="3",
