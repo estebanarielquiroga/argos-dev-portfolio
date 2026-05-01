@@ -53,9 +53,4 @@ RUN echo "=== Contenido de .web ===" && ls -la /app/.web/ 2>/dev/null || echo "S
 # ============================================================
 # RUNTIME: Caddy + backend Reflex
 # ============================================================
-CMD ["/bin/sh", "-c", "\
-    echo '=== PUERTO RAILWAY: '${PORT:-8080}' ===' && \
-    reflex run --env prod --backend-only --backend-port 8001 & \
-    sleep 5 && \
-    caddy run --config /app/Caddyfile --adapter caddyfile \
-"]
+CMD ["/bin/sh", "-c", "export PORT=${PORT:-8080} && echo \">>> PORT=$PORT\" && echo \">>> Archivos en _static:\" && ls /app/.web/_static/ 2>/dev/null || echo \"ADVERTENCIA: sin archivos estaticos\" && reflex run --env prod --backend-only --backend-port 8001 & sleep 3 && echo \">>> Iniciando Caddy en $PORT\" && caddy run --config /app/Caddyfile --adapter caddyfile"]
