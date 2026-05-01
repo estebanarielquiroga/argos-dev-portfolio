@@ -19,22 +19,18 @@ ENV REFLEX_ENV=prod
 ENV NODE_ENV=production
 ENV API_URL=https://quirodev.ar
 
-# ============================================================
-# BUILD TIME (Compilacion): Cocinamos la pagina aqui
-# ============================================================
+# Build time export
 RUN reflex init
 RUN reflex export --frontend-only --no-zip
 
-# ============================================================
-# RUNTIME (Arranque): Solo iniciamos los servidores
-# ============================================================
+# Script de arranque para 0.9.x
 RUN printf '#!/bin/sh\n\
 PORT=${PORT:-8000}\n\
 export REFLEX_BACKEND_PORT=8001\n\
-echo ">>> Iniciando Backend..."\n\
-reflex run --env prod --backend-only --port $REFLEX_BACKEND_PORT &\n\
-sleep 10\n\
-echo ">>> Iniciando Caddy en $PORT..."\n\
+echo ">>> Iniciando Backend Reflex 0.9.1..."\n\
+reflex run --env prod --backend-only &\n\
+sleep 12\n\
+echo ">>> Iniciando Caddy en puerto $PORT..."\n\
 caddy run --config /app/Caddyfile --adapter caddyfile\n\
 ' > /start.sh && chmod +x /start.sh
 
