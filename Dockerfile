@@ -1,9 +1,5 @@
-# ============================================================
-# Imagen base Python 3.11
-# ============================================================
 FROM python:3.11
 
-# Herramientas del sistema
 RUN apt-get update && apt-get install -y \
     curl unzip git \
     && rm -rf /var/lib/apt/lists/*
@@ -13,7 +9,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Caddy (servidor web)
+# Caddy
 RUN curl -fsSL https://github.com/caddyserver/caddy/releases/download/v2.8.4/caddy_2.8.4_linux_amd64.tar.gz \
     -o /tmp/caddy.tar.gz \
     && tar -xzf /tmp/caddy.tar.gz -C /tmp \
@@ -21,36 +17,42 @@ RUN curl -fsSL https://github.com/caddyserver/caddy/releases/download/v2.8.4/cad
     && chmod +x /usr/local/bin/caddy \
     && rm /tmp/caddy.tar.gz
 
-# Instalamos Bun EXPLICITAMENTE para que Reflex lo encuentre
+# Bun
 RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="/root/.bun/bin:$PATH"
 
 WORKDIR /app
 
-# Dependencias Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Codigo de la aplicacion
 COPY . .
 
-# Variables de entorno para produccion
 ENV REFLEX_ENV=prod
 ENV NODE_ENV=production
 
-# ============================================================
-# BUILD TIME: Inicializar y compilar frontend
-# ============================================================
-
-# Inicializamos (Bun ya esta en PATH, no necesita descargarlo)
+# Inicializamos en build time (instala node_modules, configura .web/)
 RUN reflex init
 
-# Exportamos el frontend y mostramos donde quedaron los archivos
-RUN reflex export --frontend-only --no-zip
-RUN echo "=== Archivos HTML generados ===" && find /app -name "*.html" -type f 2>/dev/null | head -20 || echo "SIN HTML"
-RUN echo "=== Contenido de .web ===" && ls -la /app/.web/ 2>/dev/null || echo "Sin carpeta .web"
+# Creamos el script de arranque usando printf (garantiza LF, no CRLF)
+RUN printf '#!/bin/sh\n\
+set -e\n\
+\n\
+PORT=${PORT:-8080}\n\
+echo ">>> Arrancando en puerto $PORT"\n\
+\n\
+echo ">>> Exportando frontend..."\n\
+reflex export --frontend-only --no-zip\n\
+\n\
+echo ">>> Archivos creados:"\n\
+find /app/.web -name "*.html" 2>/dev/null | head -10 || echo "SIN HTML"\n\
+\n\
+echo ">>> Iniciando backend Reflex en 8001..."\n\
+reflex run --env prod --backend-only --backend-port 8001 &\n\
+\n\
+sleep 5\n\
+echo ">>> Iniciando Caddy en $PORT..."\n\
+exec caddy run --config /app/Caddyfile --adapter caddyfile\n\
+' > /start.sh && chmod +x /start.sh
 
-# ============================================================
-# RUNTIME: Caddy + backend Reflex
-# ============================================================
-CMD ["/bin/sh", "-c", "export PORT=${PORT:-8080} && echo \">>> PORT=$PORT\" && echo \">>> Archivos en _static:\" && ls /app/.web/_static/ 2>/dev/null || echo \"ADVERTENCIA: sin archivos estaticos\" && reflex run --env prod --backend-only --backend-port 8001 & sleep 3 && echo \">>> Iniciando Caddy en $PORT\" && caddy run --config /app/Caddyfile --adapter caddyfile"]
+CMD ["/start.sh"]
