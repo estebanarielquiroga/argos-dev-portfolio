@@ -1,7 +1,8 @@
+import os
 import reflex as rx
 
 config = rx.Config(
     app_name="argos_dev_portfolio",
-    # Vaciamos el api_url para que Reflex use deteccion automatica del dominio
-    api_url="",
+    # Priorizamos la variable de entorno API_URL inyectada en el build/runtime
+    api_url=os.getenv("API_URL", "https://quirodev.ar"),
 )
