@@ -1,8 +1,8 @@
-import os
 import reflex as rx
 
 config = rx.Config(
     app_name="argos_dev_portfolio",
-    # Priorizamos la variable de entorno API_URL inyectada en el build/runtime
-    api_url=os.getenv("API_URL", "https://quirodev.ar"),
+    api_url="https://quirodev.ar",
+    # Desactivamos el plugin de sitemap que causa advertencias
+    disable_plugins=["reflex.plugins.sitemap.SitemapPlugin"],
 )
