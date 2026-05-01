@@ -13,7 +13,7 @@ def service_card(title: str, description: str, icon: str) -> rx.Component:
         rx.text(description, size="2", color=Color.TEXT_MUTED, text_align="center"),
         style=card_style,
         align_items="center",
-        spacing="4",
+        gap="4",
         width="100%",
     )
 
@@ -40,7 +40,7 @@ def services() -> rx.Component:
             spacing="6",
             width="100%",
         ),
-        spacing="5",
+        gap="5",
         align_items="center",
         padding_y="4em",
         width="100%",

@@ -15,7 +15,7 @@ def about() -> rx.Component:
             max_width="700px",
             padding="2.5em",
         ),
-        spacing="6",
+        gap="6",
         align_items="center",
         padding_y="4em",
         width="100%",

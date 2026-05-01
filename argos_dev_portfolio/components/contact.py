@@ -23,7 +23,7 @@ def contact() -> rx.Component:
                     rx.hstack(
                         rx.icon(tag="mail", size=20),
                         rx.text("Enviar Correo"),
-                        spacing="3",
+                        gap="3",
                         align_items="center",
                     ),
                     style=button_style,
@@ -36,7 +36,7 @@ def contact() -> rx.Component:
                     rx.hstack(
                         rx.icon(tag="message-circle", size=20),
                         rx.text("Chatear por WhatsApp"),
-                        spacing="3",
+                        gap="3",
                         align_items="center",
                     ),
                     style=button_style,
@@ -46,8 +46,8 @@ def contact() -> rx.Component:
                 href=whatsapp_url,
                 is_external=True,
             ),
-            spacing="5",
-            flex_direction=["column", "row"],
+            gap="5",
+            direction=["column", "row"],
             justify="center",
             padding_top="3em",
         ),

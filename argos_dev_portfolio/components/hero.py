@@ -41,7 +41,7 @@ def hero() -> rx.Component:
                 style=button_style,
                 on_click=rx.scroll_to("projects"),
             ),
-            spacing="6",
+            gap="6",
             align_items="center",
             padding_y="6em",
         ),
