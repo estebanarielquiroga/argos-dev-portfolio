@@ -28,16 +28,17 @@ ENV NODE_ENV=production
 
 RUN reflex init
 
-# Script de arranque ultra-simple (sin set -e para evitar crashes por advertencias)
+# Script de arranque ultra-simple
 RUN printf '#!/bin/sh\n\
 PORT=${PORT:-8000}\n\
+export REFLEX_BACKEND_PORT=8001\n\
 export API_URL=https://quirodev.ar\n\
 echo ">>> Exportando..."\n\
 reflex export --frontend-only --no-zip\n\
-echo ">>> Iniciando Backend..."\n\
-reflex run --env prod --backend-only --port 8001 &\n\
-sleep 7\n\
-echo ">>> Iniciando Caddy..."\n\
+echo ">>> Iniciando Backend en $REFLEX_BACKEND_PORT..."\n\
+reflex run --env prod --backend-only --port $REFLEX_BACKEND_PORT &\n\
+sleep 10\n\
+echo ">>> Iniciando Caddy en $PORT..."\n\
 caddy run --config /app/Caddyfile --adapter caddyfile\n\
 ' > /start.sh && chmod +x /start.sh
 
