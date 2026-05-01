@@ -1,56 +1,55 @@
 # ============================================================
-# Imagen base con Python 3.11 completo (no slim)
-# Usamos la imagen completa para evitar problemas con herramientas de compilación
+# Imagen base Python 3.11 completa
 # ============================================================
 FROM python:3.11
 
-# Instalamos herramientas del sistema necesarias
+# Instalamos herramientas del sistema
 RUN apt-get update && apt-get install -y \
     curl unzip git \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalamos Node.js 20 (versión requerida por Reflex)
+# Instalamos Node.js 20 (requerido por Reflex)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalamos Caddy (servidor web profesional para servir el frontend)
+# Instalamos Caddy (servidor web para servir el frontend)
 RUN curl -fsSL https://github.com/caddyserver/caddy/releases/download/v2.8.4/caddy_2.8.4_linux_amd64.tar.gz \
-    | tar xzf - caddy \
-    && mv caddy /usr/local/bin/caddy \
-    && chmod +x /usr/local/bin/caddy
+    -o /tmp/caddy.tar.gz \
+    && tar -xzf /tmp/caddy.tar.gz -C /tmp \
+    && mv /tmp/caddy /usr/local/bin/caddy \
+    && chmod +x /usr/local/bin/caddy \
+    && rm /tmp/caddy.tar.gz
 
 WORKDIR /app
 
-# Copiamos e instalamos dependencias de Python primero (para aprovechar caché de Docker)
+# Dependencias de Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiamos el código de la aplicación
+# Codigo de la aplicacion
 COPY . .
 
 # ============================================================
-# FASE DE CONSTRUCCIÓN (Build Time):
-# Compilamos el frontend aquí para que el arranque sea instantáneo
+# BUILD TIME: Compilar el frontend aqui para que el arranque sea rapido
 # ============================================================
 ENV REFLEX_ENV=prod
 ENV NODE_ENV=production
 
-# Inicializamos Reflex (descarga Bun y configura el proyecto)
 RUN reflex init
-
-# Exportamos el frontend compilado a .web/_static
 RUN reflex export --frontend-only --no-zip
 
-# Verificamos que los archivos existan (falla el build si no hay nada)
-RUN ls -la .web/_static/
+# Verificamos que los archivos existan (si falla aqui, el build falla tambien)
+RUN ls -la /app/.web/_static/
 
 # ============================================================
-# ARRANQUE (Runtime):
-# Caddy sirve el frontend (puerto $PORT de Railway)
-# Reflex corre el backend en puerto interno 8001
+# RUNTIME: Caddy sirve el frontend + Reflex corre el backend
+# Usamos un script inline para evitar problemas de CRLF en Windows
 # ============================================================
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-CMD ["/entrypoint.sh"]
+CMD ["/bin/sh", "-c", "\
+    echo '=== Iniciando backend Reflex en puerto 8001 ===' && \
+    reflex run --env prod --backend-only --backend-port 8001 & \
+    sleep 5 && \
+    echo '=== Iniciando Caddy en puerto '${PORT:-8080}' ===' && \
+    caddy run --config /app/Caddyfile --adapter caddyfile \
+"]
