@@ -44,6 +44,7 @@ def rrhh_landing() -> rx.Component:
                             rx.icon("users", size=48, color=Color.ACCENT),
                             rx.heading("Descargar Sistema", size="5", style=heading_style),
                             rx.text("Versión 64-bit | .exe | Portable", color=Color.TEXT_MUTED, size="2"),
+                            rx.text("Última actualización: 11 de Mayo 2026", color=Color.ACCENT, size="1", weight="bold"),
                             rx.button(
                                 "Descargar RRHH.exe", 
                                 on_click=rx.download(url="/RRHH.exe"),
