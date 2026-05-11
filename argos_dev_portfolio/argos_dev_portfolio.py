@@ -42,4 +42,11 @@ app = rx.App(
     stylesheets=[
         "https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;500;600;700;800;900&display=swap",
     ],
+    head_components=[
+        rx.script(
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5966960176374095",
+            async_=True,
+            crossorigin="anonymous",
+        ),
+    ],
 )
