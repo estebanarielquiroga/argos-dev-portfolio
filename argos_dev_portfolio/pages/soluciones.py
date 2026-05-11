@@ -30,10 +30,21 @@ def soluciones() -> rx.Component:
                 ),
                 rx.box(
                     rx.vstack(
+                        rx.icon("users", size=40, color=Color.ACCENT),
+                        rx.heading("Gestor de RRHH", size="6", style=heading_style),
+                        rx.text("Base de datos de recursos humanos para administrar personal y controlar licencias.", color=Color.TEXT_MUTED, size="3"),
+                        rx.link(rx.button("Ver y Descargar", style=button_style, width="100%"), href="/soluciones/gestion-rrhh", width="100%"),
+                        spacing="4",
+                        align_items="start",
+                    ),
+                    style=card_style,
+                ),
+                rx.box(
+                    rx.vstack(
                         rx.icon("bar-chart", size=40, color=Color.ACCENT),
                         rx.heading("Dashboard Asistencia", size="6", style=heading_style),
                         rx.text("Panel interactivo para visualizar el presentismo mensual y alertas tempranas.", color=Color.TEXT_MUTED, size="3"),
-                        rx.link(rx.button("Ver y Descargar", style=button_style, width="100%"), href="#", width="100%"),
+                        rx.link(rx.button("Próximamente", style=button_style, width="100%", disabled=True), href="#", width="100%"),
                         spacing="4",
                         align_items="start",
                     ),
