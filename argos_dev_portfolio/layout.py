@@ -6,6 +6,9 @@ from .styles.styles import BASE_STYLE
 def layout(*children, **kwargs) -> rx.Component:
     """Un layout base que envuelve el contenido de las páginas con la navbar y el footer."""
     return rx.box(
+        rx.html(
+            '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5966960176374095" crossorigin="anonymous"></script>'
+        ),
         navbar(),
         rx.box(
             *children,
