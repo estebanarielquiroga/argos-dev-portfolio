@@ -44,12 +44,16 @@ def macro_nomina_landing() -> rx.Component:
                             rx.icon("file-lock", size=48, color=Color.ACCENT),
                             rx.heading("Descargar Sistema", size="5", style=heading_style),
                             rx.text("Versión estable | .accdr | Runtime", color=Color.TEXT_MUTED, size="2"),
-                            rx.button(
-                                "Descargar Sanciones", 
-                                on_click=rx.download(url="/sanciones.accdr"),
-                                style=button_style, 
-                                width="100%", 
-                                margin_top="1em"
+                            rx.link(
+                                rx.button(
+                                    "Comprar Sistema de Sanciones", 
+                                    style=button_style, 
+                                    width="100%", 
+                                    margin_top="1em"
+                                ),
+                                href="https://mpago.li/2Gngo6D",
+                                is_external=True,
+                                width="100%"
                             ),
                             spacing="3",
                             align_items="center",
