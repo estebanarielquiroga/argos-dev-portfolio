@@ -1,6 +1,18 @@
 <?xml version='1.0' encoding='utf-8'?>
 <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://localhost:3000/soluciones</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/servicios</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/blog</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/sobre-mi</loc>
+  </url>
+  <url>
     <loc>http://localhost:3000/</loc>
   </url>
 </urlset>
