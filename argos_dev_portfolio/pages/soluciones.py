@@ -41,6 +41,17 @@ def soluciones() -> rx.Component:
                 ),
                 rx.box(
                     rx.vstack(
+                        rx.icon("user-cog", size=40, color=Color.ACCENT),
+                        rx.heading("Gestor PJPJ", size="6", style=heading_style),
+                        rx.text("Herramienta especializada para la gestión técnica de personal del programa PJPJ.", color=Color.TEXT_MUTED, size="3"),
+                        rx.link(rx.button("Ver y Descargar", style=button_style, width="100%"), href="/soluciones/pjpj-rrhh", width="100%"),
+                        spacing="4",
+                        align_items="start",
+                    ),
+                    style=card_style,
+                ),
+                rx.box(
+                    rx.vstack(
                         rx.icon("bar-chart", size=40, color=Color.ACCENT),
                         rx.heading("Dashboard Asistencia", size="6", style=heading_style),
                         rx.text("Panel interactivo para visualizar el presentismo mensual y alertas tempranas.", color=Color.TEXT_MUTED, size="3"),
