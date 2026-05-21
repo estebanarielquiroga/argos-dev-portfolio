@@ -42,6 +42,7 @@ def navbar() -> rx.Component:
                         )
                     ),
                     rx.menu.content(
+                        rx.menu.item("SumaHoras PWA", on_click=rx.redirect("/sumahoras/index.html")),
                         rx.menu.item("Macros Excel", on_click=rx.redirect("/soluciones/macros")),
                         rx.menu.item("Dashboards", on_click=rx.redirect("/soluciones/dashboards")),
                         rx.menu.item("Herramientas Gratuitas", on_click=rx.redirect("/soluciones")),

@@ -52,6 +52,17 @@ def soluciones() -> rx.Component:
                 ),
                 rx.box(
                     rx.vstack(
+                        rx.icon("clock", size=40, color=Color.ACCENT),
+                        rx.heading("SumaHoras (PWA)", size="6", style=heading_style),
+                        rx.text("Aplicación PWA para el control de horas de guardia y cálculo de licencias compensatorias.", color=Color.TEXT_MUTED, size="3"),
+                        rx.link(rx.button("Abrir App", style=button_style, width="100%"), href="/sumahoras/index.html", width="100%"),
+                        spacing="4",
+                        align_items="start",
+                    ),
+                    style=card_style,
+                ),
+                rx.box(
+                    rx.vstack(
                         rx.icon("bar-chart", size=40, color=Color.ACCENT),
                         rx.heading("Dashboard Asistencia", size="6", style=heading_style),
                         rx.text("Panel interactivo para visualizar el presentismo mensual y alertas tempranas.", color=Color.TEXT_MUTED, size="3"),

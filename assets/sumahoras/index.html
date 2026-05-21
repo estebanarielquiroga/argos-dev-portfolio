@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SUMAHORAS</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div id="app">
+        <!-- TOP APP BAR -->
+        <header class="app-bar">
+            <div>
+                <h1 id="app-title">SUMAHORAS</h1>
+                <span class="brand-text" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">by Argos-Dev</span>
+            </div>
+            <button id="btn-export-import" class="icon-btn"><i class="fas fa-sync-alt"></i></button>
+        </header>
+
+        <!-- MAIN CONTENT AREA -->
+        <main id="main-content">
+            <!-- PANTALLA: PERSONAL (Lista) -->
+            <section id="view-personal" class="view active">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-personal" placeholder="Buscar por apellido o legajo...">
+                </div>
+                <div id="personal-list" class="list-container">
+                    <!-- Se llena con JS -->
+                </div>
+                <button class="fab" onclick="app.showAddPersonalModal()">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </section>
+
+            <!-- PANTALLA: UNIDADES -->
+            <section id="view-unidades" class="view">
+                <div class="header-action">
+                    <h2>Unidades de Revista</h2>
+                    <button class="btn btn-primary" onclick="app.showAddUnidadModal()">Agregar</button>
+                </div>
+                <div id="unidades-list" class="list-container">
+                    <!-- Se llena con JS -->
+                </div>
+            </section>
+        </main>
+
+        <!-- BOTTOM NAVIGATION -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-target="view-personal">
+                <i class="fas fa-users"></i>
+                <span>Personal</span>
+            </button>
+            <button class="nav-item" data-target="view-unidades">
+                <i class="fas fa-building"></i>
+                <span>Unidades</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- MODALS -->
+    
+    <!-- Modal: Agregar/Editar Personal -->
+    <div id="modal-personal" class="modal">
+        <div class="modal-content glass">
+            <div class="modal-header">
+                <h3 id="modal-personal-title">Agregar Personal</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-personal">
+                    <input type="hidden" id="personal-id">
+                    <div class="form-group">
+                        <label>Legajo</label>
+                        <input type="text" id="personal-legajo" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Grado</label>
+                        <select id="personal-grado" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Apellidos y Nombres</label>
+                        <input type="text" id="personal-nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Unidad de Revista</label>
+                        <select id="personal-unidad" required></select>
+                    </div>
+                    <button type="submit" class="btn btn-primary full-width mt-2">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Carga de Horas -->
+    <div id="modal-horas" class="modal">
+        <div class="modal-content glass full-screen-modal">
+            <div class="modal-header">
+                <h3>Cargar Horas - <span id="horas-personal-name"></span></h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-add-hora" class="inline-form">
+                    <div class="form-row">
+                        <div class="form-group flex-2">
+                            <label>Fecha Entrada</label>
+                            <input type="date" id="hora-fecha" required>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label>Entrada</label>
+                            <input type="time" id="hora-entrada" required>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label>Salida</label>
+                            <input type="time" id="hora-salida" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary full-width">Registrar Guardia</button>
+                </form>
+                
+                <h4 class="mt-2">Registros de este mes (<span id="current-month-display"></span>)</h4>
+                <div class="month-selector">
+                    <button id="prev-month"><i class="fas fa-chevron-left"></i></button>
+                    <input type="month" id="horas-month-selector">
+                    <button id="next-month"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                
+                <div id="horas-list" class="mini-list-container">
+                    <!-- Registros del mes -->
+                </div>
+                
+                <div class="summary-box glass-card mt-2">
+                    <div class="summary-item">
+                        <span>Horas del Mes:</span>
+                        <strong id="summary-month-hours">0</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Horas del Año:</span>
+                        <strong id="summary-year-hours">0</strong>
+                    </div>
+                    <div class="summary-item highlight">
+                        <span>Licencia Compensatoria (Días):</span>
+                        <strong id="summary-compensatoria">0</strong>
+                    </div>
+                </div>
+                
+                <div class="actions-row mt-2">
+                    <button class="btn btn-secondary full-width" onclick="app.generatePDF()">
+                        <i class="fas fa-file-pdf"></i> Generar PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Import/Export -->
+    <div id="modal-sync" class="modal">
+        <div class="modal-content glass">
+            <div class="modal-header">
+                <h3>Sincronizar Datos</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Exporta los datos para leerlos en otro dispositivo o importa una copia de seguridad.</p>
+                <div class="mt-2">
+                    <button class="btn btn-primary full-width mb-1" onclick="app.exportData()">
+                        <i class="fas fa-download"></i> Exportar a Archivo
+                    </button>
+                    <label class="btn btn-secondary full-width" style="display: block; cursor: pointer;">
+                        <i class="fas fa-upload"></i> Importar Archivo
+                        <input type="file" id="import-file" style="display: none;" accept=".json">
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jsPDF and AutoTable libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
